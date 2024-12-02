@@ -26,14 +26,21 @@ router.put("/cancel",async (req,res)=>{
     return res.status(200).json(status);
     
 })
-router.get("/get", async (req,res)=>{
-    const shipping = await prisma.shipping.findMany()
-    return res.status(200).json(shipping);
-})
-router.get("/api/shipping/get?userId",async (req,res)=>{
+router.get("/get?userId=?",async (req,res)=>{
     const {userId} =req.query
-    console.log(userId)
+    console.log("aaa")
     const shipment  = await prisma.shipping.findMany({where:{userId:userId}})
     return res.status(200).json(shipment);
 })
+router.get("/get", async (req,res)=>{
+    const {userId} =req.query
+    console.log(userId)
+    if(userId){
+        const shipment  = await prisma.shipping.findMany({where:{userId:parseInt(userId)}})
+        return res.status(200).json(shipment);
+    }
+    const shipping = await prisma.shipping.findMany()
+    return res.status(200).json(shipping);
+})
+
 module.exports=router;
